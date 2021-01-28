@@ -1,0 +1,41 @@
+server:
+  port: 8360
+  compression:
+    enabled: true # 开启gzip压缩
+
+spring:
+  application:
+    name: blog
+  datasource:
+    url: jdbc:mysql:///community?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    timeout: 5000
+    jedis:
+      pool:
+        maxActive: 3
+        maxIdle: 3
+        minIdle: 1
+        maxWait: -1 #连接池最大等行时间 -1没有限制
+  thymeleaf:
+    cache: false
+  mail:
+    host: smtp.qq.com
+    username: 1172972519@qq.com
+    password: mjtyiwyyelkrjdbj
+    properties.mail.smtp.port: 465
+    properties.mail.smtp.starttls.enable: true
+    properties.mail.smtp.starttls.required: true
+    properties.mail.smtp.ssl.enable: true
+    default-encoding: utf-8
+
+mybatis:
+  type-aliases-package: org.kuro.community.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 开启控制台打印 sql
+    map-underscore-to-camel-case: true                    # 下划线转驼峰配置
+  mapper-locations: classpath:mapper/*.xml                # 配置扫描
