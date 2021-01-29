@@ -31,4 +31,18 @@ public interface UserService {
      * @return
      */
     Integer active(Integer userId, String code);
+
+    /**
+     * 登录
+     * @param username
+     * @param password
+     * @return
+     */
+    Map<String, Object> login(String username, String password, Integer expiredSeconds);
+
+    /**
+     * 退出登录
+     * @param ticket
+     */
+    void logout(String ticket);
 }

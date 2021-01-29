@@ -15,4 +15,9 @@ public interface CommunityConstant {
     // 激活失败
     Integer ACTIVE_FAILURE = 2;
 
+    // 默认状态的登录凭证的超时时间 (3小时)
+    Integer DEFAULT_EXPIRED_SECONDS = 3600 * 3;
+
+    // 记住状态的登录凭证的超时时间
+    Integer REMEMBER_EXPIRED_SECONDS = 3600 * 24 * 100;
 }

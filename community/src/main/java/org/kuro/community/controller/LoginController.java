@@ -1,15 +1,27 @@
 package org.kuro.community.controller;
 
+import com.google.code.kaptcha.Producer;
+import org.apache.commons.lang3.StringUtils;
 import org.kuro.community.entity.User;
 import org.kuro.community.service.UserService;
 import org.kuro.community.utils.CommunityConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 
 /**
@@ -19,8 +31,13 @@ import java.util.Map;
 @Controller
 public class LoginController implements CommunityConstant {
 
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private Producer producer;
 
     @GetMapping("/register")
     public String getRegisterPage() {
@@ -61,5 +78,60 @@ public class LoginController implements CommunityConstant {
     @GetMapping("/login")
     public String loginPage() {
         return "/site/login";
+    }
+
+    @GetMapping("/kaptcha")
+    public void kaptcha(HttpServletResponse response, HttpSession session) {
+        // 生成验证码
+        String text = producer.createText();
+        BufferedImage image = producer.createImage(text);
+
+        // 将验证码存入session
+        session.setAttribute("kaptcha", text);
+
+        // 将图片输出给浏览器
+        response.setContentType("image/png");
+        try {
+            OutputStream stream = response.getOutputStream();
+            ImageIO.write(image, "png", stream);
+        } catch (IOException e) {
+            logger.error("响应验证码失败：" + e.getMessage());
+        }
+    }
+
+    @PostMapping("/login")
+    public String login(String username, String password, String code, Boolean remember,
+                        Model model, HttpSession session, HttpServletResponse response) {
+        // 检查验证码
+        String kaptcha = (String) session.getAttribute("kaptcha");
+        if (StringUtils.isBlank(kaptcha) || StringUtils.isBlank(code) || !kaptcha.equalsIgnoreCase(code)) {
+            model.addAttribute("codeMsg", "验证码错误！");
+            return "/site/login";
+        }
+
+        Integer expiredSeconds;
+        if (remember == null) {
+            expiredSeconds = DEFAULT_EXPIRED_SECONDS;
+        } else {
+            expiredSeconds = REMEMBER_EXPIRED_SECONDS;
+        }
+        Map<String, Object> map = userService.login(username, password, expiredSeconds);
+        if (map.containsKey("ticket")) {
+            Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
+            cookie.setPath("/");
+            cookie.setMaxAge(expiredSeconds);
+            response.addCookie(cookie);
+            return "redirect:/";
+        } else {
+            model.addAttribute("usernameMsg", map.get("usernameMsg"));
+            model.addAttribute("passwordMsg", map.get("passwordMsg"));
+            return "/site/login";
+        }
+    }
+
+    @GetMapping("/logout")
+    public String logout(@CookieValue("ticket") String ticket) {
+        userService.logout(ticket);
+        return "redirect:/login";
     }
 }
