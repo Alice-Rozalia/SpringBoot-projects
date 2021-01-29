@@ -38,4 +38,9 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 开启控制台打印 sql
     map-underscore-to-camel-case: true                    # 下划线转驼峰配置
+    use-generated-keys: true
   mapper-locations: classpath:mapper/*.xml                # 配置扫描
+
+community:
+  path:
+    domain: http://localhost:8360
