@@ -44,3 +44,4 @@ mybatis:
 community:
   path:
     domain: http://localhost:8360
+    upload: D:/video

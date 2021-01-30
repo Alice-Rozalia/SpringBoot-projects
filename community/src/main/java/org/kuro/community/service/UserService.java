@@ -1,5 +1,6 @@
 package org.kuro.community.service;
 
+import org.kuro.community.entity.LoginTicket;
 import org.kuro.community.entity.User;
 
 import java.util.Map;
@@ -45,4 +46,18 @@ public interface UserService {
      * @param ticket
      */
     void logout(String ticket);
+
+    /**
+     * 查询登录凭证
+     * @param ticket
+     * @return
+     */
+    LoginTicket findLoginTicket(String ticket);
+
+    /**
+     * 更新用户头像
+     * @param user
+     * @return
+     */
+    Integer updateHeader(User user);
 }

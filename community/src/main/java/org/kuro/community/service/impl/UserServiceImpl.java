@@ -191,4 +191,25 @@ public class UserServiceImpl implements UserService, CommunityConstant {
         loginTicketMapper.updateStatus(ticket, 1);
     }
 
+    /**
+     * 查询登录凭证
+     *
+     * @param ticket
+     * @return
+     */
+    @Override
+    public LoginTicket findLoginTicket(String ticket) {
+        return loginTicketMapper.findLoginTicketByTicket(ticket);
+    }
+
+    /**
+     * 更新用户头像
+     * @param user
+     * @return
+     */
+    @Override
+    public Integer updateHeader(User user) {
+        return userMapper.updateByPrimaryKeySelective(user);
+    }
+
 }
