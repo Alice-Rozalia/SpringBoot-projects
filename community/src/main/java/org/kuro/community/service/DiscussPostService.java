@@ -25,4 +25,18 @@ public interface DiscussPostService {
      * @return
      */
     Integer discussPostTotal(Integer userId);
+
+    /**
+     * 发布帖子
+     * @param discussPost
+     * @return
+     */
+    String addDiscussPost(DiscussPost discussPost);
+
+    /**
+     * 根据id查询帖子
+     * @param id
+     * @return
+     */
+    DiscussPost findDiscussPostById(Integer id);
 }
