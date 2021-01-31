@@ -39,4 +39,11 @@ public interface DiscussPostService {
      * @return
      */
     DiscussPost findDiscussPostById(Integer id);
+
+    /**
+     * 更新评论数量
+     * @param discussPost
+     * @return
+     */
+    Integer updateCommentCount(DiscussPost discussPost);
 }

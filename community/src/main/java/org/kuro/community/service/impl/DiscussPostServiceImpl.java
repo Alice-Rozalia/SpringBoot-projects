@@ -96,4 +96,15 @@ public class DiscussPostServiceImpl implements DiscussPostService {
     public DiscussPost findDiscussPostById(Integer id) {
         return discussPostMapper.selectByPrimaryKey(id);
     }
+
+    /**
+     * 更新评论数量
+     *
+     * @param discussPost
+     * @return
+     */
+    @Override
+    public Integer updateCommentCount(DiscussPost discussPost) {
+        return discussPostMapper.updateByPrimaryKeySelective(discussPost);
+    }
 }
