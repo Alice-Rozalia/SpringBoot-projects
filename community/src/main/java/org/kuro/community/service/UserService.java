@@ -60,4 +60,11 @@ public interface UserService {
      * @return
      */
     Integer updateHeader(User user);
+
+    /**
+     * 根据用户名查询用户
+     * @param username
+     * @return
+     */
+    User findUserByUsername(String username);
 }

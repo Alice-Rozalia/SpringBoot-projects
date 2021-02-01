@@ -212,4 +212,15 @@ public class UserServiceImpl implements UserService, CommunityConstant {
         return userMapper.updateByPrimaryKeySelective(user);
     }
 
+    /**
+     * 根据用户名查询用户
+     *
+     * @param username
+     * @return
+     */
+    @Override
+    public User findUserByUsername(String username) {
+        return userMapper.findByUsername(username);
+    }
+
 }
