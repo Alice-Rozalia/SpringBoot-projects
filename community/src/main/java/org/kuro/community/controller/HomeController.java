@@ -4,7 +4,9 @@ import org.kuro.community.entity.DiscussPost;
 import org.kuro.community.entity.Page;
 import org.kuro.community.entity.User;
 import org.kuro.community.service.DiscussPostService;
+import org.kuro.community.service.LikeService;
 import org.kuro.community.service.UserService;
+import org.kuro.community.utils.CommunityConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,13 +24,16 @@ import java.util.Map;
  * @Date: 2021/1/28 17:01
  */
 @Controller
-public class HomeController {
+public class HomeController implements CommunityConstant {
 
     @Autowired
     private DiscussPostService discussPostService;
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private LikeService likeService;
 
     @GetMapping("/")
     public String getIndexPage(Model model, Page page) {
@@ -45,6 +50,8 @@ public class HomeController {
                 map.put("post", post);
                 User user = userService.findUserById(post.getUserId());
                 map.put("user", user);
+                Long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, post.getId());
+                map.put("likeCount", likeCount);
                 discussPosts.add(map);
             }
         }
