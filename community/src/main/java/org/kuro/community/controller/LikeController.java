@@ -31,7 +31,7 @@ public class LikeController {
         User user = hostHolder.getUser();
 
         // 点赞
-        likeService.like(user.getId(), entityType, entityId);
+        likeService.like(user.getId(), entityType, entityId, entityUserId);
         // 数量
         long likeCount = likeService.findEntityLikeCount(entityType, entityId);
         // 状态

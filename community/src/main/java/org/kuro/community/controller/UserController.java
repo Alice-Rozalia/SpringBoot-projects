@@ -3,6 +3,7 @@ package org.kuro.community.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.kuro.community.annotation.LoginRequired;
 import org.kuro.community.entity.User;
+import org.kuro.community.service.LikeService;
 import org.kuro.community.service.UserService;
 import org.kuro.community.utils.CommunityUtil;
 import org.kuro.community.utils.HostHolder;
@@ -45,6 +46,9 @@ public class UserController {
 
     @Autowired
     private HostHolder hostHolder;
+
+    @Autowired
+    private LikeService likeService;
 
     @LoginRequired
     @GetMapping("/setting")
@@ -105,4 +109,17 @@ public class UserController {
         }
     }
 
+    @GetMapping("/profile/{userId}")
+    public String getProfilePage(@PathVariable("userId") Integer userId, Model model) {
+        User user = userService.findUserById(userId);
+        if (user == null) {
+            throw new RuntimeException("该用户不存在！");
+        }
+
+        model.addAttribute("user", user);
+        Integer likeCount = likeService.findUserLikeCount(userId);
+        model.addAttribute("likeCount", likeCount);
+
+        return "/site/profile";
+    }
 }
